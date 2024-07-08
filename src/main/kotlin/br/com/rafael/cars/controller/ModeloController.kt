@@ -8,6 +8,7 @@ import io.swagger.v3.oas.annotations.media.ArraySchema
 import io.swagger.v3.oas.annotations.media.Content
 import io.swagger.v3.oas.annotations.media.Schema
 import io.swagger.v3.oas.annotations.responses.ApiResponse
+import jakarta.websocket.server.PathParam
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.MediaType
 import org.springframework.web.bind.annotation.*
@@ -23,7 +24,7 @@ class ModeloController {
     @GetMapping
     @Operation(
         summary = "Finds all models",
-        description = "Finds all brands",
+        description = "Finds all models",
         tags = ["Brands"],
         responses = [ApiResponse(
             description = "Success",
@@ -53,8 +54,8 @@ class ModeloController {
 
     @RequestMapping(value = ["/{id}"], method = [RequestMethod.GET])
     @Operation(
-        summary = "Finds a brand",
-        description = "Finds a brand",
+        summary = "Finds a model",
+        description = "Finds a model",
         tags = ["Brands"],
         responses = [ApiResponse(
             description = "Success",
@@ -78,14 +79,14 @@ class ModeloController {
             content = [Content(schema = Schema(implementation = Void::class))]
         )]
     )
-    fun findVyId(@PathVariable(value = "id") id: Long): ModeloVO{
+    fun findbyId(@PathVariable(value = "id") id: Long): ModeloVO{
         return service.findById(id)
     }
 
     @PostMapping(consumes = [MediaType.APPLICATION_JSON_VALUE])
     @Operation(
-        summary = "Create a new brand",
-        description = "Create a new brand",
+        summary = "Create a new model",
+        description = "Create a new model",
         tags = ["Brands"],
         responses = [ApiResponse(
             description = "Success",
@@ -111,8 +112,8 @@ class ModeloController {
 
     @PutMapping("/{id}")
     @Operation(
-        summary = "Updates a brand",
-        description = "Updates a brand",
+        summary = "Updates a model",
+        description = "Updates a model",
         tags = ["Brands"],
         responses = [ApiResponse(
             description = "Success",
@@ -136,14 +137,14 @@ class ModeloController {
             content = [Content(schema = Schema(implementation = Void::class))]
         )]
     )
-    fun update(@RequestBody modelo: ModeloVO): ModeloVO{
-        return service.update(modelo)
+    fun update(@RequestBody modelo: ModeloVO, @PathVariable("id") id: Long): ModeloVO{
+        return service.update(modelo, id)
     }
 
     @DeleteMapping("/{id}")
     @Operation(
-        summary = "Deletes a brand",
-        description = "Deletes a brand",
+        summary = "Deletes a model",
+        description = "Deletes a model",
         tags = ["Brands"],
         responses = [ApiResponse(
             description = "Bad Request",

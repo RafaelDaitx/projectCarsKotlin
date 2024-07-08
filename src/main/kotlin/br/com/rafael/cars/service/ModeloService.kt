@@ -38,11 +38,11 @@ class ModeloService {
         return DozerMapper.parseObject( modeloRepository.save(entity), ModeloVO::class.java)
     }
 
-    fun update(modelo: ModeloVO): ModeloVO{
-        logger.info("Updating model with id: " + modelo.key);
+    fun update(modelo: ModeloVO, id: Long): ModeloVO{
+        logger.info("Updating model with id: " + id);
 
-        val entity = modeloRepository.findById(modelo.key)
-            .orElseThrow(){ResourceNotFoundException("No records found for this ID!")}
+        val entity = modeloRepository.findById(id)
+            .orElseThrow{ResourceNotFoundException("No records found for this ID!")}
 
         entity.nome = modelo.nome
         entity.valorFipe = modelo.valorFipe
@@ -57,7 +57,13 @@ class ModeloService {
         val modelo = modeloRepository.findById(id)
             .orElseThrow(){ResourceNotFoundException("No records found for this ID!")}
 
-        return DozerMapper.parseObject(modelo, ModeloVO::class.java)
+           return ModeloVO(
+               key = modelo.id,
+               nome = modelo.nome,
+               valorFipe = modelo.valorFipe,
+               combustivel = modelo.combustivel,
+               marcaId = modelo.marca?.id ?: 0L
+        )
     }
 
     fun findAll(): List<ModeloVO>{
@@ -80,6 +86,10 @@ class ModeloService {
 
         val entity = modeloRepository.findById(id)
             .orElseThrow(){ResourceNotFoundException("No records found for this ID!")}
+
+        val carroRelacionado = carroRepository.findModeloInCarro(id)
+
+        if(carroRelacionado!!.isNotEmpty()) throw IllegalStateException("Não é possível deletar o modelo porque há carros associados a ele.")
 
         modeloRepository.delete(entity)
     }
