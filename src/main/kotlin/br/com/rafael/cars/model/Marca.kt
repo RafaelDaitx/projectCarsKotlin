@@ -11,5 +11,5 @@ data class Marca (
     var id: Long = 0,
 
     @Column(name = "nome_marca")
-    var nome_marca: String = ""
+    var nomeMarca: String = ""
 )

@@ -1,8 +1,10 @@
 package br.com.rafael.cars.service
 
+import api_rest_kotlin.mapper.DozerMapper
 import br.com.rafael.cars.exceptions.ResourceNotFoundException
 import br.com.rafael.cars.model.Marca
 import br.com.rafael.cars.repository.MarcaRepository
+import br.com.rafael.cars.vo.MarcaVO
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import java.util.logging.Logger
@@ -15,30 +17,39 @@ class MarcaService {
 
     private val logger = Logger.getLogger(MarcaService::class.java.name)
 
-    fun save(marca: Marca): Marca{
-        logger.info("Saving brand with id: " + marca.id);
-        return repository.save(marca)
+    fun save(marca: MarcaVO): MarcaVO{
+        logger.info("Saving brand with id: " + marca.key)
+
+        //Converto para entidade para salvar no banco
+        val entity: Marca = DozerMapper.parseObject(marca, Marca::class.java)
+
+        //converto novamente para Vo para devolver a requisição
+        return DozerMapper.parseObject( repository.save(entity), MarcaVO::class.java)
     }
 
-    fun update(marca: Marca): Marca{
-        logger.info("Updating brand with id: " + marca.id);
-        val entity = repository.findById(marca.id)
+    fun update(marca: MarcaVO): MarcaVO{
+        logger.info("Updating brand with id: " + marca.key);
+        val entity = repository.findById(marca.key)
             .orElseThrow { ResourceNotFoundException("No records found for this ID!") }
 
-        entity.nome_marca = marca.nome_marca
+        entity.nomeMarca = marca.nomeMarca
 
-        return repository.save(entity)
+        return DozerMapper.parseObject(repository.save(entity), MarcaVO::class.java)
     }
 
-    fun findAll(): List<Marca>{
+    fun findAll(): List<MarcaVO>{
         logger.info("Findig all brands")
-        return repository.findAll()
+
+        val marcas =  repository.findAll()
+        return marcas.map { m -> DozerMapper.parseObject(m, MarcaVO::class.java) }
     }
 
-    fun findById(id: Long): Marca{
+    fun findById(id: Long): MarcaVO{
         logger.info("Finding brand with id: $id")
-        return repository.findById(id)
+        val marca =  repository.findById(id)
             .orElseThrow { ResourceNotFoundException("No records found for this ID!") }
+        return DozerMapper.parseObject(marca, MarcaVO::class.java)
+
     }
 
     fun delete(id: Long) {

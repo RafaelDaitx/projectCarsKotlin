@@ -2,6 +2,7 @@ package br.com.rafael.cars.controller
 
 import br.com.rafael.cars.model.Modelo
 import br.com.rafael.cars.service.ModeloService
+import br.com.rafael.cars.vo.ModeloVO
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.media.ArraySchema
 import io.swagger.v3.oas.annotations.media.Content
@@ -46,7 +47,7 @@ class ModeloController {
             content = [Content(schema = Schema(implementation = Void::class))]
         )]
     )
-    private fun findAll(): List<Modelo> {
+    private fun findAll(): List<ModeloVO> {
         return service.findAll()
     }
 
@@ -77,7 +78,7 @@ class ModeloController {
             content = [Content(schema = Schema(implementation = Void::class))]
         )]
     )
-    fun findVyId(@PathVariable(value = "id") id: Long): Modelo{
+    fun findVyId(@PathVariable(value = "id") id: Long): ModeloVO{
         return service.findById(id)
     }
 
@@ -104,7 +105,7 @@ class ModeloController {
             content = [Content(schema = Schema(implementation = Void::class))]
         )]
     )
-    fun create(@RequestBody modelo: Modelo): Modelo{
+    fun create(@RequestBody modelo: ModeloVO): ModeloVO{
         return service.save(modelo)
     }
 
@@ -135,7 +136,7 @@ class ModeloController {
             content = [Content(schema = Schema(implementation = Void::class))]
         )]
     )
-    fun update(@RequestBody modelo: Modelo): Modelo{
+    fun update(@RequestBody modelo: ModeloVO): ModeloVO{
         return service.update(modelo)
     }
 

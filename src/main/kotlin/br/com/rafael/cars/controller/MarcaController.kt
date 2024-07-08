@@ -2,6 +2,7 @@ package br.com.rafael.cars.controller
 
 import br.com.rafael.cars.model.Marca
 import br.com.rafael.cars.service.MarcaService
+import br.com.rafael.cars.vo.MarcaVO
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.media.ArraySchema
 import io.swagger.v3.oas.annotations.media.Content
@@ -45,7 +46,7 @@ class MarcaController {
             content = [Content(schema = Schema(implementation = Void::class))]
         )]
     )
-    fun findAll(): List<Marca> {
+    fun findAll(): List<MarcaVO> {
         return service.findAll()
     }
 
@@ -76,7 +77,7 @@ class MarcaController {
             content = [Content(schema = Schema(implementation = Void::class))]
         )]
     )
-    fun findVyId(@PathVariable(value = "id") id: Long): Marca{
+    fun findVyId(@PathVariable(value = "id") id: Long): MarcaVO{
         return service.findById(id)
     }
 
@@ -103,7 +104,7 @@ class MarcaController {
             content = [Content(schema = Schema(implementation = Void::class))]
         )]
     )
-    fun create(@RequestBody marca: Marca): Marca{
+    fun create(@RequestBody marca: MarcaVO): MarcaVO{
         return service.save(marca)
     }
 
@@ -134,7 +135,7 @@ class MarcaController {
             content = [Content(schema = Schema(implementation = Void::class))]
         )]
     )
-    fun update(@RequestBody marca: Marca): Marca{
+    fun update(@RequestBody marca: MarcaVO): MarcaVO{
         return service.update(marca)
     }
 
