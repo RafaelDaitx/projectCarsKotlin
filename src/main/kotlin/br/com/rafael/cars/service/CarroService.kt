@@ -1,8 +1,10 @@
 package br.com.rafael.cars.service
 
+import api_rest_kotlin.mapper.DozerMapper
 import br.com.rafael.cars.exceptions.ResourceNotFoundException
 import br.com.rafael.cars.model.Carro
 import br.com.rafael.cars.repository.CarroRepository
+import br.com.rafael.cars.vo.CarroVO
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import java.util.logging.Logger
@@ -16,34 +18,49 @@ class CarroService {
 
     private val logger = Logger.getLogger(CarroService::class.java.name)
 
-    fun save(carro: Carro): Carro {
-        logger.info("Saving brand with id: " + carro.id);
-        return repository.save(carro)
+    fun save(carro: CarroVO): CarroVO {
+        logger.info("Saving brand with id: " + carro.key);
+        val entity: Carro = DozerMapper.parseObject(carro, Carro::class.java)
+
+        return DozerMapper.parseObject(repository.save(entity), CarroVO::class.java)
     }
 
-    fun update(carro: Carro): Carro {
-        logger.info("Updating brand with id: " + carro.id);
-        val entity = repository.findById(carro.id)
+    fun update(carro: CarroVO): CarroVO {
+        logger.info("Updating brand with id: " + carro.key);
+        val entity = repository.findById(carro.key)
             .orElseThrow { ResourceNotFoundException("No records found for this ID!") }
 
         entity.ano = carro.ano
         entity.combustivel = carro.combustivel
-        entity.num_portas = carro.num_portas
+        entity.num_portas = carro.numPortas
         entity.cor = carro.cor
-        entity.modelo = carro.modelo
+        entity.modelo!!.id = carro.modeloId
 
-        return repository.save(entity)
+        return DozerMapper.parseObject(repository.save(entity), CarroVO::class.java)
     }
 
-    fun findAll(): List<Carro>{
+    fun findAll(): List<CarroVO>{
         logger.info("Findig all brands")
-        return repository.findAll()
+        val carros = repository.findAll()
+
+        val vo = carros.map { m -> DozerMapper.parseObject(m, CarroVO::class.java) }
+
+        vo.forEachIndexed { index, carroVO ->
+            val carro = carros[index]
+            carroVO.modeloId = carro.modelo?.id ?: 0L
+            carroVO.valor = carro.modelo?.valorFipe ?: 0.0
+        }
+        return vo
+
+
     }
 
-    fun findById(id: Long): Carro {
+    fun findById(id: Long): CarroVO {
         logger.info("Finding brand with id: $id")
-        return repository.findById(id)
+        val carro = repository.findById(id)
             .orElseThrow { ResourceNotFoundException("No records found for this ID!") }
+
+        return DozerMapper.parseObject(carro, CarroVO::class.java)
     }
 
     fun delete(id: Long) {

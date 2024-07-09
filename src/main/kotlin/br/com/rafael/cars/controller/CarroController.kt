@@ -2,6 +2,7 @@ package br.com.rafael.cars.controller
 
 import br.com.rafael.cars.model.Carro
 import br.com.rafael.cars.service.CarroService
+import br.com.rafael.cars.vo.CarroVO
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.media.ArraySchema
 import io.swagger.v3.oas.annotations.media.Content
@@ -47,8 +48,11 @@ class CarroController {
             content = [Content(schema = Schema(implementation = Void::class))]
         )]
     )
-    fun findAll(): List<Carro> {
-        return service.findAll()
+    fun findAll(): Map<String, List<CarroVO>> {
+        val carros = service.findAll()
+         val response: MutableMap<String, List<CarroVO>> =  mutableMapOf();
+        response["cars"] = carros
+        return response
     }
 
     @RequestMapping(value = ["/{id}"], method = [RequestMethod.GET])
@@ -78,7 +82,7 @@ class CarroController {
             content = [Content(schema = Schema(implementation = Void::class))]
         )]
     )
-    fun findVyId(@PathVariable(value = "id") id: Long): Carro {
+    fun findVyId(@PathVariable(value = "id") id: Long): CarroVO {
         return service.findById(id)
     }
 
@@ -105,7 +109,7 @@ class CarroController {
             content = [Content(schema = Schema(implementation = Void::class))]
         )]
     )
-    fun create(@RequestBody carro: Carro): Carro {
+    fun create(@RequestBody carro: CarroVO): CarroVO {
         return service.save(carro)
     }
 
@@ -136,7 +140,7 @@ class CarroController {
             content = [Content(schema = Schema(implementation = Void::class))]
         )]
     )
-    fun update(@RequestBody carro: Carro): Carro {
+    fun update(@RequestBody carro: CarroVO): CarroVO {
         return service.update(carro)
     }
 
