@@ -82,7 +82,7 @@ class CarroController {
             content = [Content(schema = Schema(implementation = Void::class))]
         )]
     )
-    fun findVyId(@PathVariable(value = "id") id: Long): CarroVO {
+    fun findById(@PathVariable(value = "id") id: Long): CarroVO {
         return service.findById(id)
     }
 

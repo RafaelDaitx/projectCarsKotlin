@@ -23,7 +23,7 @@ data class CarroVO (
     var key: Long = 0,
 
     @field:JsonProperty("timestamp_cadastro")
-    var timestampCadastro: Date = Date(),
+    var timestampCadastro: Long = 0,
 
     @field:JsonProperty("modelo_id")
     var modeloId: Long = 0,
