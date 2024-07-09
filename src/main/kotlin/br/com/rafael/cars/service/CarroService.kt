@@ -37,18 +37,26 @@ class CarroService {
         return vo
     }
 
-    fun update(carro: CarroVO): CarroVO {
-        logger.info("Updating brand with id: " + carro.key);
-        val entity = repository.findById(carro.key)
+    fun update(carro: CarroVO, id: Long): CarroVO {
+        logger.info("Updating brand with id: $id");
+        val entity = repository.findById(id)
             .orElseThrow { ResourceNotFoundException("No records found for this ID!") }
+
+        val modelo = modeloRepository.findById(carro.modeloId)
+            .orElseThrow(){ResourceNotFoundException("Model not found with ID ${carro.modeloId}")}
 
         entity.ano = carro.ano
         entity.combustivel = carro.combustivel
         entity.num_portas = carro.numPortas
         entity.cor = carro.cor
-        entity.modelo!!.id = carro.modeloId
+        entity.modelo = modelo
 
-        return DozerMapper.parseObject(repository.save(entity), CarroVO::class.java)
+        val vo = DozerMapper.parseObject(repository.save(entity), CarroVO::class.java)
+        vo.modeloId = entity.modelo!!.id
+        vo.nomeModelo = entity.modelo!!.nome
+        vo.valor = entity.modelo!!.valorFipe
+
+        return vo
     }
 
     fun findAll(): List<CarroVO>{

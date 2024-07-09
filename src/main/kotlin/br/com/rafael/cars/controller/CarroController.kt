@@ -140,8 +140,8 @@ class CarroController {
             content = [Content(schema = Schema(implementation = Void::class))]
         )]
     )
-    fun update(@RequestBody carro: CarroVO): CarroVO {
-        return service.update(carro)
+    fun update(@RequestBody carro: CarroVO, @PathVariable("id") id: Long): CarroVO {
+        return service.update(carro, id)
     }
 
     @DeleteMapping("/{id}")

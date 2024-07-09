@@ -135,8 +135,8 @@ class MarcaController {
             content = [Content(schema = Schema(implementation = Void::class))]
         )]
     )
-    fun update(@RequestBody marca: MarcaVO): MarcaVO{
-        return service.update(marca)
+    fun update(@RequestBody marca: MarcaVO, @PathVariable("id") id: Long): MarcaVO{
+        return service.update(marca, id)
     }
 
     @DeleteMapping("/{id}")

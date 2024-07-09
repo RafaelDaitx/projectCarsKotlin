@@ -27,9 +27,9 @@ class MarcaService {
         return DozerMapper.parseObject( repository.save(entity), MarcaVO::class.java)
     }
 
-    fun update(marca: MarcaVO): MarcaVO{
-        logger.info("Updating brand with id: " + marca.key);
-        val entity = repository.findById(marca.key)
+    fun update(marca: MarcaVO, id: Long): MarcaVO{
+        logger.info("Updating brand with id: $id");
+        val entity = repository.findById(id)
             .orElseThrow { ResourceNotFoundException("No records found for this ID!") }
 
         entity.nomeMarca = marca.nomeMarca
