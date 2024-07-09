@@ -4,6 +4,7 @@ import api_rest_kotlin.mapper.DozerMapper
 import br.com.rafael.cars.exceptions.ResourceNotFoundException
 import br.com.rafael.cars.model.Carro
 import br.com.rafael.cars.repository.CarroRepository
+import br.com.rafael.cars.repository.ModeloRepository
 import br.com.rafael.cars.vo.CarroVO
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
@@ -16,13 +17,24 @@ class CarroService {
     @Autowired
     private lateinit var repository: CarroRepository
 
+    @Autowired
+    private lateinit var modeloRepository: ModeloRepository
+
     private val logger = Logger.getLogger(CarroService::class.java.name)
 
     fun save(carro: CarroVO): CarroVO {
         logger.info("Saving brand with id: " + carro.key);
         val entity: Carro = DozerMapper.parseObject(carro, Carro::class.java)
 
-        return DozerMapper.parseObject(repository.save(entity), CarroVO::class.java)
+        val modelo = modeloRepository.findById(carro.modeloId)
+            .orElseThrow(){ResourceNotFoundException("Model not found with ID ${carro.modeloId}")}
+
+        val vo =  DozerMapper.parseObject(repository.save(entity), CarroVO::class.java)
+        vo.modeloId = modelo.id
+        vo.valor  = modelo.valorFipe
+        vo.nomeModelo = modelo.nome
+
+        return vo
     }
 
     fun update(carro: CarroVO): CarroVO {
