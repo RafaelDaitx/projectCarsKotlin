@@ -50,3 +50,7 @@ nesse modelo, é apagar todos os carros com o ID do modelo em questão, e então
 
 <h1><strong>Marca Controller</strong></h1>
 <h4>Sem observações</h4>
+
+
+<p>Como fiz este código por último não implementei os testes por falta de tempo. Este, em Kotlin, foi de certa forma mais fácil de codificar,
+pois a regra de negócio fictícia estavaa mais clara nesse ponto.</p>
